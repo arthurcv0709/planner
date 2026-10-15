@@ -58,6 +58,20 @@ app.get("/tasks/:id", (req, res) => {
   res.json(task);
 });
 
+app.patch("/tasks/:id/complete", (req, res) => {
+  const id = Number(req.params.id);
+  const task = tasks.get(id);
+
+  if (!task) {
+    return res.status(404).json({ error: "Task not found" });
+  }
+
+  task.completed = true;
+  task.completionDate = new Date().toLocaleDateString("en-GB");
+
+  res.json(task);
+});
+
 app.post("/tasks", (req, res) => {
   const { title, date } = req.body;
 

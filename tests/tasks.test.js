@@ -26,6 +26,22 @@ test("GET /tasks/:id returns 404 for non-existent task", async () => {
   assert.deepEqual(response.body, { error: "Task not found" });
 });
 
+test("PATCH /tasks/:id/complete marks a task as completed", async () => {
+  const response = await request(app).patch("/tasks/1/complete");
+
+  assert.equal(response.status, 200);
+  assert.equal(response.body.id, 1);
+  assert.equal(response.body.completed, true);
+  assert.match(response.body.completionDate, /^\d{1,2}\/\d{1,2}\/\d{4}$/);
+});
+
+test("PATCH /tasks/:id/complete returns 404 for non-existent task", async () => {
+  const response = await request(app).patch("/tasks/999/complete");
+
+  assert.equal(response.status, 404);
+  assert.deepEqual(response.body, { error: "Task not found" });
+});
+
 test("POST /tasks creates a new task", async () => {
   const newTask = {
     title: "Elaborar os projetos de desenvolvimento da turma.",
